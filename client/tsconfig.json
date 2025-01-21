@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "incremental": true,                         // Enables incremental compilation
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo", // Path for tsbuildinfo
+    "target": "ES2022",                          // Set target to ES2022
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],    // Include necessary libraries
+    "module": "ESNext",                          // Use ESNext module format
+    "skipLibCheck": true,                        // Skip type checking of declaration files
+    "moduleResolution": "bundler",               // Use bundler for module resolution
+    "allowImportingTsExtensions": true,          // Allow importing `.ts` extensions
+    "isolatedModules": true,                     // Ensure every file is treated as a module
+    "moduleDetection": "force",                  // Force module detection for ESNext
+    "noEmit": true,                              // Do not emit output files
+    "jsx": "react-jsx",                          // Enable React JSX transform
+    "strict": true,                              // Enable strict type checking
+    "noUnusedLocals": true,                      // Disallow unused local variables
+    "noUnusedParameters": true,                  // Disallow unused function parameters
+    "noFallthroughCasesInSwitch": true           // Prevent fallthrough cases in switch statements
+  },
+  "include": ["src"]  // Specify the source folder
+}

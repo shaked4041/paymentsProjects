@@ -1,0 +1,77 @@
+@use '../../global';
+
+.mainHeaderContainer {
+  min-height: 70px;
+  border: 0.5px solid black;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.headerTitle {
+  background-color: var(--mainColor);
+  width: 200px;
+  height: 100%;
+  color: white;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+}
+
+.addButton {
+  background-color: transparent;
+  border: none;
+  font-size: 25px;
+  padding: 5px;
+  cursor: pointer;
+
+  &:hover {
+    color: var(--buttonColor);
+    font-size: 30px;
+  }
+}
+
+.logoutButton {
+  background-color: transparent;
+  border: none;
+  font-size: 20px;
+  
+  cursor: pointer;
+  pointer-events: auto;
+  position: relative;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.tooltipContainer {
+  margin-left: auto;
+  padding-right: 10px;
+  position: relative;
+  display: inline-block;
+}
+
+.tooltipText {
+  visibility: hidden;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 12px;
+  position: absolute;
+  bottom: 80%; 
+  right: 10%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: visibility 0.2s, opacity 0.2s;
+}
+
+.tooltipContainer:hover .tooltipText {
+  visibility: visible;
+  opacity: 1;
+}

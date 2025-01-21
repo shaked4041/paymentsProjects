@@ -1,0 +1,74 @@
+@use '../../global';
+
+.addBillContainer {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--backroundColor);
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  padding-top: 30px;
+}
+
+.mainContainer {
+  background-color: white;
+  width: 70%;
+  border: none;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainTitle {
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.formContainer {
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.inputStyle {
+  border: 1px solid #66666654;
+  border-radius: 6px;
+  padding: 10px;
+}
+
+.submitButton {
+  background-color: var(--buttonColor);
+  color: white;
+  border-radius: 15px;
+  border: none;
+  padding: 8px;
+  margin: 10px;
+  font-size: 15px;
+  cursor: pointer;
+  width: 50%;
+  margin-left: 25%;
+
+  &:hover {
+    background-color: #2564eb9d;
+  }
+}
+
+@media (max-width: 900px) {
+    // html, body {
+    //   height: 100%;
+    //   overflow: hidden;
+    // }
+
+  .addBillContainer {
+    height: 100vh;
+    padding: 20px;
+    overflow: hidden;
+  }
+
+    .mainContainer {
+        width: 90%;
+  }
+}

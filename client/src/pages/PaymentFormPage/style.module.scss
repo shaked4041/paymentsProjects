@@ -1,0 +1,43 @@
+@use '../../global';
+
+.paymentContainer {
+  background-color: var(--backroundColor);
+  height: 100%;
+}
+
+.compContainer {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  justify-content: center;
+  padding-top: 20px;
+}
+
+.FormBillContainer {
+  width: 60%;
+  height: 600px;
+}
+
+.paymentBillCont {
+  border-radius: 10px;
+  width: 25%;
+  height: 400px;
+  background-color: white;
+}
+
+@media (max-width: 1000px) {
+  .compContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    align-items: center;
+  }
+
+  .FormBillContainer {
+    width: 80%;
+  }
+
+  .paymentBillCont {
+    width: 80%;
+  }
+}

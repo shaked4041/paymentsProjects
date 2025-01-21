@@ -1,0 +1,251 @@
+@use '../../global';
+
+.dashContainer {
+  background-color: var(--backroundColor);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.mainTableCont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mainTitle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.titleCont {
+  margin: 15px;
+}
+
+.searchContainer {
+  display: flex;
+  align-items: center;
+  padding-left: 15px;
+  width: 300px;
+  height: 40px;
+  border-radius: 25px;
+  font-size: 14px;
+  background-color: white;
+  outline: none;
+  border: none;
+  color: black;
+
+  &::placeholder {
+    color: var(--secondColor);
+  }
+}
+
+.searchIcon {
+  display: none;
+}
+
+.addButton {
+  background-color: var(--buttonColor);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  width: 70px;
+  margin: 10px;
+  cursor: pointer;
+  padding: 5px;
+
+  &:hover {
+    background-color: #2564eb96;
+  }
+}
+
+.tableCont {
+  width: 90%;
+  margin-top: 50px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-bottom: 20px;
+}
+
+.theadCont th {
+  padding: 10px 30px;
+  background-color: #f8f9fa;
+
+  &:first-child {
+    border-bottom-left-radius: 15px;
+  }
+  &:last-child {
+    border-bottom-right-radius: 15px;
+  }
+}
+
+.tbodyCont {
+  display: block;
+  max-height: 370px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.theadCont,
+.tbodyCont tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.tbodyCont td {
+  text-align: left;
+  vertical-align: middle;
+  padding: 10px;
+  padding-left: 40px;
+}
+
+.payButton {
+  background-color: var(--buttonColor);
+  color: white;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.pendingStyle {
+  background-color: #ffedd5;
+  border-radius: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  border: none;
+  color: #9a3412;
+  width: 90px;
+
+}
+
+.overdueStyle {
+  background-color: #fee2e2;
+  border-radius: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  border: none;
+  color: #991b1b;
+  width: 90px;
+
+}
+
+.notPaidStyle {
+  background-color: #fee2e2;
+  border-radius: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  border: none;
+  color: #991b1b;
+  width: 90px;
+
+}
+
+.paidStyle {
+  background-color: #dcfce7;
+  width: 90px;
+  border-radius: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  border: none;
+  color: #166534;
+}
+
+.processStyle {
+  width: 90px;
+  background-color: rgba(66, 158, 239, 0.158);
+  border-radius: 20px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: 20px;
+  border: none;
+  color: rgb(66, 158, 239);
+}
+
+.cardContainer {
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .dashContainer {
+    min-height: 100%;
+    height: auto;
+  }
+
+  .tableCont {
+    display: none;
+  }
+
+  .cardContainer {
+    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+  }
+
+  .card {
+    background-color: #fff;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 90%;
+  }
+
+  .cardItem {
+    margin-bottom: 10px;
+  }
+
+  .cardActions {
+    margin-top: 10px;
+  }
+
+  .searchContainer {
+    display: none;
+  }
+
+  .searchIcon {
+    display: block;
+    margin-left: auto;
+    background-color: white;
+    padding: 8px;
+    border-radius: 30%;
+    cursor: pointer;
+  }
+
+  .openSearchCont {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .searchContainerOpen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-left: 15px;
+    width: 300px;
+    height: 40px;
+    border-radius: 25px;
+    font-size: 14px;
+    background-color: white;
+    outline: none;
+    border: none;
+    color: black;
+
+    &::placeholder {
+      color: var(--secondColor);
+    }
+  }
+}

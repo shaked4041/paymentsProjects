@@ -1,0 +1,56 @@
+@use '../../global';
+
+.mainPayment {
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.titleContainer {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.methodCont {
+  border: #eef2ff solid 1px;
+  border-radius: 10px;
+  display: flex;
+  padding: 15px;
+  gap: 10px;
+}
+
+.amountInput {
+  border: none;
+  width: 100%;
+
+  &:focus{
+    outline: none;
+    border: none;
+  }
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none; 
+  margin: 0;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield; 
+}
+
+
+.minAmount{
+  font-size: 13px;
+  padding: 8px;
+  color: var(--grayColor);
+}
+
+.buttonContainer{
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  cursor: pointer;
+}
