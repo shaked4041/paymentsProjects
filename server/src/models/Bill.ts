@@ -1,4 +1,4 @@
-import mongoose, { Model, Schema, Types } from 'mongoose';
+import mongoose, { Model, Schema } from 'mongoose';
 import { IBill } from '../utils/types';
 
 const BillSchema: Schema = new Schema<IBill>({
