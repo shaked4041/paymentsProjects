@@ -1,9 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
-import {
-  decodeAccessToken,
-  decodeRefreshToken,
-} from './jwt';
+import { decodeAccessToken, decodeRefreshToken } from './jwt';
 import { HttpError, TokenPayload } from '../utils/types';
 import { setTokensAndCookies } from '../utils/funcs';
 
@@ -17,7 +14,7 @@ declare global {
 
 dotenv.config();
 
-export const authenticateTokenMiddlware = async (
+ const authenticateTokenMiddlware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -25,11 +22,11 @@ export const authenticateTokenMiddlware = async (
   try {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-    
+
     if (!accessToken && !refreshToken) {
       throw new HttpError('Access denied, no tokens present', 401);
     }
-    
+
     if (accessToken) {
       const payload = decodeAccessToken(accessToken);
       if (payload) {
@@ -37,16 +34,16 @@ export const authenticateTokenMiddlware = async (
         return next();
       }
     }
-    
+
     if (!refreshToken) {
       throw new HttpError('No refresh token', 401);
     }
-    
+
     const payload = decodeRefreshToken(refreshToken);
     if (!payload) {
       res.clearCookie('accessToken', { path: '/' });
       res.clearCookie('refreshToken', { path: '/' });
-      
+
       throw new HttpError('Invalid refresh token', 403);
     }
     const isProduction = process.env.NODE_ENV === 'production';
@@ -55,11 +52,9 @@ export const authenticateTokenMiddlware = async (
     req.user = payload;
     next();
   } catch (error) {
-    if (error instanceof HttpError) {
-      res.status(error.status).json({ message: error.message });
-    }
-
     console.error('Auth middleware error:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+export { authenticateTokenMiddlware };

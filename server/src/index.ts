@@ -1,16 +1,16 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import connectDB from './db';
+import { connectDB } from './db';
 import cors from 'cors';
 import billRouter from './routes/billRoutes';
 import paymentRouter from './routes/paymentRoutes';
 import webhookRouter from './webhooks/webhookListener';
 import userRouter from './routes/userRoutes';
-import authRouter from './routes/authRoutes'
+import authRouter from './routes/authRoutes';
 import { Server } from 'socket.io';
 import http from 'http';
-import { authenticateTokenMiddlware } from './middleware/auth';
 import cookieParser from 'cookie-parser';
+import { authenticateTokenMiddlware } from './middleware/auth';
 
 dotenv.config();
 
@@ -26,20 +26,18 @@ app.use(
     origin: ['http://localhost:5174', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
-      'Content-Type', 
+      'Content-Type',
       'Authorization',
       'Access-Control-Allow-Headers',
       'Access-Control-Allow-Credentials',
-      'Access-Control-Allow-Origin'
+      'Access-Control-Allow-Origin',
     ],
     exposedHeaders: ['Set-Cookie'],
     credentials: true,
   })
 );
 
-
 app.options('*', cors());
-
 
 const server = http.createServer(app);
 const io = new Server(server, {
@@ -49,11 +47,11 @@ const io = new Server(server, {
   },
 });
 
-app.use('/bills',authenticateTokenMiddlware, billRouter);
-app.use('/payments',authenticateTokenMiddlware, paymentRouter);
+app.use('/bills', authenticateTokenMiddlware, billRouter);
+app.use('/payments', authenticateTokenMiddlware, paymentRouter);
 app.use('/webhooks', webhookRouter);
 app.use('/users', userRouter);
-app.use('/auth', authRouter)
+app.use('/auth', authRouter);
 
 io.on('connection', (socket) => {
   console.log('A user connected');
@@ -67,10 +65,17 @@ export const sendPaymentUpdate = (billId: string, status: string) => {
   io.emit('paymentStatusUpdate', { billId, status });
 };
 
-app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
-});
+app.use(
+  (
+    err: any,
+    req: express.Request,
+    res: express.Response,
+    next: express.NextFunction
+  ) => {
+    console.error(err.stack);
+    res.status(500).json({ message: 'Something went wrong!' });
+  }
+);
 
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
