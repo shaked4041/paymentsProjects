@@ -12,8 +12,6 @@ export default function Index() {
   const nav = useNavigate();
 
   const [allBillsData, setAllBillsData] = useState<Bill[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
   const [filteredBills, setFilteredBills] = useState<Bill[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [openSearch, setOpenSearch] = useState<boolean>(false);
@@ -24,10 +22,8 @@ export default function Index() {
         const bills = await fetchAllBills();
         setAllBillsData(bills);
         setFilteredBills(bills);
-        setLoading(false);
       } catch (err) {
-        setError(err as Error);
-        setLoading(false);
+      console.log(err);
       }
     };
     fetchBills();

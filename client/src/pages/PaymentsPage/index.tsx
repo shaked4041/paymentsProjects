@@ -6,7 +6,6 @@ import { PaymentsTable } from '../../components/PaymentTable';
 import { PaymentsCard } from '../../components/PaymentsCard';
 
 export default function index() {
-  const [error, setError] = useState<string | null>(null);
   const [payments, setPayments] = useState<Payment[]>([]);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ export default function index() {
         const payments = await fetchAllPayments();
         setPayments(payments);
       } catch (error) {
-        setError('Error fetching bill data');
+        console.log(error);
       }
     };
     fetchPayments();
