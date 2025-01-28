@@ -1,6 +1,6 @@
-import express from 'express';
 import dotenv from 'dotenv';
-import { connectDB } from './db';
+import express from 'express'
+import { connectDB } from './db';  // Include .ts extension
 import cors from 'cors';
 import billRouter from './routes/billRoutes';
 import paymentRouter from './routes/paymentRoutes';
@@ -65,17 +65,7 @@ export const sendPaymentUpdate = (billId: string, status: string) => {
   io.emit('paymentStatusUpdate', { billId, status });
 };
 
-app.use(
-  (
-    err: any,
-    req: express.Request,
-    res: express.Response,
-    next: express.NextFunction
-  ) => {
-    console.error(err.stack);
-    res.status(500).json({ message: 'Something went wrong!' });
-  }
-);
+
 
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
