@@ -2,8 +2,8 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import { getSingleBill, updateBill } from '../services/billService';
 import { create } from '../controllers/paymentController';
-import { sendPaymentUpdate } from '..';
 import { Types } from 'mongoose';
+import { sendPaymentUpdate } from '../services/socketService';
 
 const router = Router();
 
