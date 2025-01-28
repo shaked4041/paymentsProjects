@@ -4,20 +4,18 @@ import styles from './style.module.scss';
 import { LuEyeOff } from 'react-icons/lu';
 import { LuEye } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
+import GoogleSignIn from '../../components/GoogleSignIn';
+import { ILoginState } from '../../utils/types';
 
-
-interface IFormState {
-  email: string;
-  password: string;
-}
 
 export default function LoginPage() {
-  const formTemplate: IFormState = {
+  const formTemplate: ILoginState = {
     email: '',
     password: '',
   };
-  const [formState, setFormState] = useState<IFormState>(formTemplate);
+  const [formState, setFormState] = useState<ILoginState>(formTemplate);
   const [isPassVisible, setIsPassVisible] = useState<Boolean>(false);
+
   const nav = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -38,11 +36,11 @@ export default function LoginPage() {
         nav('/');
       }
       console.log(res);
-
     } catch (error: any) {
       console.error({ 'User creation faild': error.response.data.msg });
     }
   };
+
   return (
     <div className={styles.registerPage}>
       <h1>Login</h1>
@@ -81,6 +79,7 @@ export default function LoginPage() {
         <span className={styles.loginLink}>
           Don't have an account? <Link to={`/register`}>Sign in</Link>
         </span>
+        <GoogleSignIn />
       </div>
     </div>
   );

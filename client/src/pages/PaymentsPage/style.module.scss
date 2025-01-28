@@ -1,0 +1,40 @@
+.dashContainer {
+  background-color: var(--backroundColor);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.titleCont {
+  margin: 15px;
+}
+
+.mainTableCont {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cardContainer {
+    display: none;
+  }
+
+  @media (max-width: 700px) {
+    .dashContainer {
+      min-height: 100%;
+      height: auto;
+    }
+    .tableCont {
+      display: none;
+    }
+  
+    .cardContainer {
+      display: block;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+    }
+  
+  }

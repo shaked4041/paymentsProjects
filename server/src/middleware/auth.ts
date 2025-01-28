@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import {
-  createAccessToken,
-  createRefreshToken,
   decodeAccessToken,
   decodeRefreshToken,
-  TokenPayload,
 } from './jwt';
-import { HttpError } from '../utils/types';
+import { HttpError, TokenPayload } from '../utils/types';
+import { setTokensAndCookies } from '../utils/funcs';
 
 declare global {
   namespace Express {
@@ -51,27 +49,8 @@ export const authenticateTokenMiddlware = async (
       
       throw new HttpError('Invalid refresh token', 403);
     }
-    
-    const newAccessToken = createAccessToken({ _id: payload._id });
-    const newRefreshToken = createRefreshToken({ _id: payload._id });
-    
     const isProduction = process.env.NODE_ENV === 'production';
-    
-    res.cookie('accessToken', newAccessToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 5 * 60 * 1000,
-    });
-    
-    res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokensAndCookies(payload._id, res, isProduction);
 
     req.user = payload;
     next();

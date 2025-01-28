@@ -4,14 +4,8 @@ import styles from './style.module.scss';
 import { LuEyeOff } from 'react-icons/lu';
 import { LuEye } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
-
-interface IFormState {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  passwordConfirm: string;
-}
+import GoogleSignIn from '../../components/GoogleSignIn';
+import { IFormState } from '../../utils/types';
 
 export default function RegisterPage() {
   const formTemplate: IFormState = {
@@ -48,6 +42,8 @@ export default function RegisterPage() {
       console.error({ 'User creation faild': error.response.data.msg });
     }
   };
+
+ 
   return (
     <div className={styles.registerPage}>
       <h1>Sign Up</h1>
@@ -121,6 +117,9 @@ export default function RegisterPage() {
         <span className={styles.loginLink}>
           Already have an account? <Link to={`/login`}>Log in</Link>
         </span>
+        <div className={styles.googleSignIn}>
+        <GoogleSignIn/>
+        </div>
       </div>
     </div>
   );

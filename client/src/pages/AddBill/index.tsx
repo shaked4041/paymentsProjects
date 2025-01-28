@@ -2,12 +2,8 @@ import React, { useState } from 'react';
 import styles from './style.module.scss';
 import { createBill } from '../../utils/reqs';
 import { useNavigate } from 'react-router-dom';
+import { IBillForm } from '../../utils/types';
 
-export interface IBillForm {
-  name: string;
-  amount: number;
-  dueDate: Date;
-}
 
 export default function index() {
   const formTemplate: IBillForm = {

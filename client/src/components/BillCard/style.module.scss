@@ -1,0 +1,118 @@
+.cardContainer {
+  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.card {
+  background-color: #fff;
+  margin: 10px;
+  border-radius: 15px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  display: flex;
+  flex-direction: row;
+  gap: 100px;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 0px;
+}
+
+.cardRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cardLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.cardItem {
+  margin-bottom: 10px;
+}
+
+.cardActions {
+  margin-top: 10px;
+}
+
+.payButton {
+  background-color: var(--buttonColor);
+  color: white;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+}
+
+.pendingStyle {
+  background-color: #ffedd5;
+  border-radius: 20px;
+  padding: 7px;
+  border: none;
+  color: #9a3412;
+  width: 90px;
+}
+
+.overdueStyle {
+  background-color: #fee2e2;
+  border-radius: 20px;
+  padding: 7px;
+  border: none;
+  color: #991b1b;
+  width: 90px;
+}
+
+.notPaidStyle {
+  background-color: #fee2e2;
+  border-radius: 20px;
+  padding: 7px;
+  border: none;
+  color: #991b1b;
+  width: 90px;
+}
+
+.paidStyle {
+  background-color: #dcfce7;
+  width: 90px;
+  border-radius: 20px;
+  padding: 7px;
+  border: none;
+  color: #166534;
+}
+
+.processStyle {
+  width: 90px;
+  background-color: rgba(66, 158, 239, 0.158);
+  border-radius: 20px;
+  padding: 7px;
+  border: none;
+  color: rgb(66, 158, 239);
+}
+
+
+.edit{
+  width: 10px;
+  margin-left: auto;
+  margin-bottom: auto;
+  cursor: pointer;
+  padding-bottom: 10px;
+}
+
+.editButton {
+  background-color: transparent; 
+  color: black;
+  cursor: pointer;
+  border: none;
+  font-size: 20px;
+}
+
+@media (max-width: 500px) {
+  .card{
+    gap: 20px;
+  }
+}

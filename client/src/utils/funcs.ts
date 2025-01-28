@@ -1,4 +1,3 @@
-import { jwtDecode } from 'jwt-decode';
 import { PaymentError } from './types';
 
 export const formattedDate = (date: Date | string): string => {
@@ -27,7 +26,6 @@ export const isDateInCurrentMonth = (dateString: string): boolean => {
     inputDate.getMonth() === today.getMonth()
   );
 };
-
 
 export const validateAmount = (
   value: number,

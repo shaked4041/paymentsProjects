@@ -1,10 +1,15 @@
-import mongoose, { Types } from 'mongoose';
-import { getUserByEmail, update } from '../controllers/userController';
+import { Types } from 'mongoose';
+import {
+  getUserByEmail,
+  getUserById,
+  update,
+} from '../controllers/userController';
 import { createUser } from '../controllers/userController';
 import { IUser, UserPayload } from '../utils/types';
+import bcrypt from 'bcrypt';
 
 export const addNewUser = async (data: UserPayload) => {
-  const { email, firstName, lastName, password } = data;
+  const { email, firstName, lastName, password , firebaseUid} = data;
   try {
     const checkEmailUser = await getUserByEmail(email);
     if (checkEmailUser) {
@@ -34,29 +39,41 @@ export const getUser = async (email: string) => {
   }
 };
 
+type UserUpdateData = Partial<{
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  billId: Types.ObjectId;
+}>;
+
 export const updateUser = async (
   userId: string,
-  updatedData: {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-    billId?: Types.ObjectId;
-    }
+  updatedData: UserUpdateData
 ): Promise<IUser | null> => {
   try {
-    const updateQuery: any = {};
+
+    const user = await getUserById(userId);
+    if (!user) {
+      throw new Error("User doesn't exsist");
+    }
+
+    const updateQuery: Record<string, any> = {};
+    const pushOperations: Record<string, any> = {};
 
     if (updatedData.firstName) updateQuery.firstName = updatedData.firstName;
     if (updatedData.lastName) updateQuery.lastName = updatedData.lastName;
     if (updatedData.email) updateQuery.email = updatedData.email;
-    if (updatedData.password) updateQuery.password = updatedData.password;
-    if (updatedData.billId) {
-      updateQuery.$push = { billIds: updatedData.billId };
+
+    if (updatedData.password) {
+      updateQuery.password = await bcrypt.hash(updatedData.password, 10);
     }
 
-    const updatedUser = await update(userId, updateQuery);
-    return updatedUser;
+    if (updatedData.billId) {
+      pushOperations.billIds = updatedData.billId;
+    }
+
+    return await update(userId, updateQuery, pushOperations);
   } catch (error) {
     console.error('Error in updateUser:', error);
     throw new Error('Failed to update user');

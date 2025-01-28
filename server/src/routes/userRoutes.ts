@@ -3,16 +3,6 @@ import { identifyCurrentUser } from '../utils/funcs';
 
 const router = Router();
 
-// router.get('/', async (req: Request, res: Response) => {
-//     try {
-//         const users = await getAllUsers();
-//         res.status(201).json(users)
-//     } catch (error) {
-//         console.error(error)
-//         res.status(500).send(error || 'somthong went wrong getting al users')
-//     }
-// })
-
 router.get('/current-user', (req: Request, res: Response): void => {
   try {
     const userId = identifyCurrentUser(req);

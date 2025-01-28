@@ -1,35 +1,34 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styles from './style.module.scss';
+import { IoSearch } from 'react-icons/io5';
+import { SearchBarProps } from '../../utils/types';
 
-interface SearchProps {
-  dataToFilter: { name: string }[];
-}
 
-export const SearchBar: React.FC<SearchProps> = ({ dataToFilter }) => {
-  const [searchValue, setSearchValue] = useState<string>('');
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-  };
-
-  const filteredData = dataToFilter.filter((item) => {
-    if (searchValue.length > 0){
-      return item.name.toLowerCase().includes(searchValue.toLowerCase());
-    }
-  });
+export const SearchBar: React.FC<SearchBarProps> = ({
+  searchQuery,
+  onSearch,
+  openSearch,
+  toggleSearch,
+}) => {
   return (
-    <div>
+    <div className={styles.searchWrapper}>
       <input
-        className={styles.searchContainer}
-        onChange={handleSearchChange}
-        placeholder="search bills..."
+        value={searchQuery}
+        className={styles.desktopSearch}
+        onChange={(e) => onSearch(e.target.value)}
+        placeholder="Search bills..."
       />
+      <div className={styles.searchIcon} onClick={toggleSearch}>
+        <IoSearch />
+      </div>
 
-      <div>
-        {filteredData.length > 0 ? (
-          filteredData.map((item, index) => <div key={index}>{item.name}</div>)
-        ) : (
-          <div>No item found</div>
-        )}
+      <div className={`${styles.mobileSearchWrapper} ${openSearch ? styles.open : ''}`}>
+          <input
+            value={searchQuery}
+            className={styles.mobileSearch}
+            onChange={(e) => onSearch(e.target.value)}
+            placeholder="Search bills..."
+          />
       </div>
     </div>
   );

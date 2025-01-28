@@ -1,11 +1,7 @@
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { io, Socket } from 'socket.io-client';
-
-interface PaymentStatus {
-  billId: string;
-  status: string;
-}
+import { PaymentStatus } from '../utils/types';
 
 export const usePaymentSocket = (
   billId: string | undefined,

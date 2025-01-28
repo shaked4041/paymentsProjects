@@ -1,19 +1,14 @@
 import React from 'react';
 import styles from './style.module.scss';
-
-interface ButtonProps {
-  buttonText: string;
-  onClick?: () => void;
-  disabled?: boolean;
-}
+import { ButtonProps } from '../../utils/types';
 
 const Button: React.FC<ButtonProps> = ({ buttonText, onClick, disabled }) => {
   return (
     <div
       className={`${styles.buttonContainer} ${disabled ? styles.disabled : ''}`}
-      onClick={disabled ? undefined : onClick} // Don't trigger onClick if disabled
+      onClick={disabled ? undefined : onClick} 
       role="button"
-      tabIndex={disabled ? -1 : 0} // Remove from tab order if disabled
+      tabIndex={disabled ? -1 : 0} 
     >
       {buttonText}
     </div>

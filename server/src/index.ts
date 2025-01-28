@@ -37,6 +37,7 @@ app.use(
   })
 );
 
+
 app.options('*', cors());
 
 
@@ -48,10 +49,8 @@ const io = new Server(server, {
   },
 });
 
-// app.use('/bills', billRouter);
 app.use('/bills',authenticateTokenMiddlware, billRouter);
 app.use('/payments',authenticateTokenMiddlware, paymentRouter);
-// app.use('/payments', paymentRouter);
 app.use('/webhooks', webhookRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter)

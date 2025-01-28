@@ -8,7 +8,6 @@ export default function index() {
   const handleLogout = () => {
     logout();
     nav('/login');
-    // console.log(res);
   };
 
   return (

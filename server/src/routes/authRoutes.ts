@@ -1,12 +1,10 @@
 import { Request, Response, Router } from 'express';
 import bcrypt from 'bcrypt';
-import {
-  createAccessToken,
-  createRefreshToken,
-  decodeRefreshToken,
-} from '../middleware/jwt';
+import { decodeRefreshToken } from '../middleware/jwt';
 import { addNewUser, getUser } from '../services/userService';
 import dotenv from 'dotenv';
+import { setTokensAndCookies } from '../utils/funcs';
+import { verifyFirebaseToken } from '../utils/firebaseAdmin';
 
 dotenv.config();
 
@@ -23,33 +21,14 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const isPasswordValid = bcrypt.compareSync(
-      user.password,
-      checkUser.password
-    );
+    const isPasswordValid =
+      checkUser.password && user.password
+        ? bcrypt.compareSync(user.password, checkUser.password)
+        : false;
 
     if (!isPasswordValid) throw { msg: 'Invalid password', code: 401 };
-
-    const accessToken = createAccessToken({ _id: checkUser._id });
-    const refreshToken = createRefreshToken({ _id: checkUser._id });
-
     const isProduction = process.env.NODE_ENV === 'production';
-
-    res.cookie('accessToken', accessToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 5 * 60 * 1000,
-    });
-
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokensAndCookies(checkUser._id, res, isProduction);
 
     res.json({ message: 'Logged in successfully' });
   } catch (error: any) {
@@ -58,9 +37,42 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+router.post('/firebase-google', async (req: Request, res: Response) => {
+  try {
+    const { idToken } = req.body;
+    const firebaseUSer = await verifyFirebaseToken(idToken);
+    const { email, name, uid } = firebaseUSer;
+    if (!email) {
+      res.status(400).json({ error: 'Email not available in the ID token' });
+      return;
+    }
+
+    let user = await getUser(email);
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    if (!user) {
+      const newUser = await addNewUser({
+        email,
+        firstName: name.split(' ')[0],
+        lastName: name.split(' ')[1] || '',
+        firebaseUid: uid,
+      });
+      setTokensAndCookies(newUser._id, res, isProduction);
+
+      res.json({ message: 'Logged in successfully with Google', newUser });
+    } else {
+      setTokensAndCookies(user._id, res, isProduction);
+      res.json({ message: 'Logged in successfully with Google', user });
+    }
+  } catch (error) {
+    console.error('Error during Firebase Google login:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
   try {
-    const { refreshToken } = req.cookies; 
+    const { refreshToken } = req.cookies;
     if (!refreshToken) {
       res.status(401).json({ message: 'No refresh token provided' });
       return;
@@ -74,7 +86,6 @@ router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-
     const expirationTime = payload.exp ? payload.exp * 1000 : null;
     const currentTime = Date.now();
 
@@ -84,30 +95,10 @@ router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
       res.status(403).json({ message: 'Refresh token expired' });
       return;
     }
-
-    const newAccessToken = createAccessToken({ _id: payload._id });
-    const newRefreshToken = createRefreshToken({ _id: payload._id });
-
     const isProduction = process.env.NODE_ENV === 'production';
-
-    res.cookie('accessToken', newAccessToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 5 * 60 * 1000,
-    });
-
-    res.cookie('refreshToken', newRefreshToken, {
-      httpOnly: true,
-      secure: isProduction,
-      sameSite: isProduction ? 'strict' : 'lax',
-      path: '/',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    setTokensAndCookies(payload._id, res, isProduction);
 
     res.status(200).json({ message: 'Tokens refreshed successfully' });
-
   } catch (error) {
     console.error('Error refreshing token:', error);
     res.status(500).json({ message: 'Internal server error' });

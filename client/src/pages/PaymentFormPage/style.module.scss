@@ -1,7 +1,6 @@
 @use '../../global';
 
 .paymentContainer {
-  background-color: var(--backroundColor);
   height: 100%;
 }
 
@@ -26,6 +25,11 @@
 }
 
 @media (max-width: 1000px) {
+  .paymentContainer {
+    background-color: var(--backroundColor);
+    height: 100%;
+  }
+
   .compContainer {
     display: flex;
     flex-direction: column;

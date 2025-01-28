@@ -1,0 +1,128 @@
+.tableCont {
+  width: 90%;
+  margin-top: 50px;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border-radius: 15px;
+  margin-bottom: 20px;
+
+  table-layout: fixed;
+}
+
+.theadCont th,
+.tbodyCont td {
+  text-align: left;
+  padding: 10px 30px;
+}
+
+.theadCont th {
+  background-color: #f8f9fa;
+
+  &:first-child {
+    border-bottom-left-radius: 15px;
+  }
+  &:last-child {
+    border-bottom-right-radius: 15px;
+  }
+}
+
+.tbodyCont {
+  display: block;
+  max-height: 370px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.theadCont,
+.tbodyCont tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.tbodyCont td {
+  text-align: left;
+  vertical-align: middle;
+  padding: 10px 30px;
+}
+
+.payButton {
+  background-color: var(--buttonColor);
+  color: white;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  width: 80px;
+}
+
+.pendingStyle {
+  background-color: #ffedd5;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  color: #9a3412;
+  width: 90px;
+}
+
+.overdueStyle {
+  background-color: #fee2e2;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  color: #991b1b;
+  width: 90px;
+}
+
+.notPaidStyle {
+  background-color: #fee2e2;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  color: #991b1b;
+  width: 90px;
+}
+
+.paidStyle {
+  background-color: #dcfce7;
+  width: 90px;
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  color: #166534;
+  padding: 10px;
+}
+
+.processStyle {
+  width: 90px;
+  background-color: rgba(66, 158, 239, 0.158);
+  border-radius: 20px;
+  padding: 10px;
+  border: none;
+  color: rgb(66, 158, 239);
+}
+
+.edit{
+  width: 10px;
+}
+
+.editButton {
+  background-color: transparent; 
+  color: black;
+  cursor: pointer;
+  border: none;
+  font-size: 20px;
+}
+
+
+@media (max-width: 700px) {
+  .dashContainer {
+    min-height: 100%;
+    height: auto;
+  }
+
+  .tableCont {
+    display: none;
+  }
+}

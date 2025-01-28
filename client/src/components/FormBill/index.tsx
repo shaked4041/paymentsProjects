@@ -1,13 +1,6 @@
 import { formattedDate } from '../../utils/funcs';
+import { FormBillProps } from '../../utils/types';
 import styles from './style.module.scss';
-
-interface FormBillProps {
-  billName: string;
-  totalAmount: number;
-  dueDate: string;
-  setPaymentMethod: (method: string) => void;
-  amountPaid?: number;
-}
 
 export default function FormBill({
   billName,

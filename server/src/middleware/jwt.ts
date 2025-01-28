@@ -1,6 +1,9 @@
 import jwt, { JwtPayload, SignOptions, VerifyErrors } from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import { Types } from 'mongoose';
+import { TokenPayload } from '../utils/types';
+import { auth } from 'firebase-admin';
+import admin from 'firebase-admin';
 
 dotenv.config();
 
@@ -11,9 +14,7 @@ if (!SECRET || !REFRESH_SECRET) {
   throw new Error('Secret keys are not defined in environment variables');
 }
 
-export interface TokenPayload extends JwtPayload {
-  _id: Types.ObjectId;
-}
+
 const createToken = (payload: object, secret: string, options: SignOptions): string => {
   return jwt.sign(payload, secret, options);
 };
@@ -27,7 +28,6 @@ const verifyToken = (token: string, secret: string): TokenPayload | null => {
   }
 };
 
-// Usage
 export const createAccessToken = (payload: TokenPayload): string => {
   return createToken(payload, SECRET, { expiresIn: '5m' });
 };
@@ -53,3 +53,4 @@ export const decodeRefreshToken = (token: string): TokenPayload | null => {
   }
   return decoded;
 };
+

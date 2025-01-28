@@ -6,7 +6,7 @@ import {
   update,
   readOne,
 } from '../controllers/billController';
-import { IBill } from '../utils/types';
+import { BillUpdateData, IBill } from '../utils/types';
 import UserModel from '../models/User';
 
 export async function getAllBills(filter: any = {}) {
@@ -28,7 +28,7 @@ export async function createNewBill({
   name: string;
   amount: number;
   dueDate: Date;
-  userId: string;
+  userId: Types.ObjectId;
 }) {
   try {
     if (new Date(dueDate).getTime() < Date.now()) {
@@ -76,7 +76,7 @@ export async function getUnpaidBills() {
   }
 }
 
-export async function getSingleBill(billId: string): Promise<IBill | null> {
+export async function getSingleBill(billId: Types.ObjectId): Promise<IBill | null> {
   try {
     const bill = await readOne(billId);
     return bill;
@@ -87,41 +87,43 @@ export async function getSingleBill(billId: string): Promise<IBill | null> {
 }
 
 
-
 export async function updateBill(
-  billId: string,
-  updatedData: {
-    status?: string;
-    amount?: number;
-    name?: string;
-    dueDate?: Date;
-    paymentId?: Types.ObjectId;
-    paymentAmount?: number;
-  }
+  billId: Types.ObjectId,
+  updatedData: BillUpdateData
 ): Promise<IBill | null> {
   try {
-    const updateQuery: any = {};
+    
+    const bill = await readOne(billId);
+    if (!bill) {
+      throw new Error("Bill doesn't exsist");
+    }
 
-    const setQuery: any = {};
-    const pushQuery: any = {};
-    const incQuery: any = {};
-
-    if (updatedData.status) setQuery.status = updatedData.status;
-    if (updatedData.amount) setQuery.amount = updatedData.amount;
-    if (updatedData.name) setQuery.name = updatedData.name;
-    if (updatedData.dueDate) setQuery.dueDate = updatedData.dueDate;
-    if (updatedData.paymentId) pushQuery.paymentsIds = updatedData.paymentId;
-    if (updatedData.paymentAmount) incQuery.amountPaid = updatedData.paymentAmount;
-
-    if (Object.keys(setQuery).length > 0) updateQuery.$set = setQuery;
-    if (Object.keys(pushQuery).length > 0) updateQuery.$push = pushQuery;
-    if (Object.keys(incQuery).length > 0) updateQuery.$inc = incQuery;
-
-    if (Object.keys(updateQuery).length === 0) {
+    if (Object.keys(updatedData).length === 0) {
       throw new Error('No valid fields provided for update');
     }
 
-    const updatedBill = await update(billId, updateQuery);
+    const operations: Record<string, any> = {};
+
+    const setOperations: Record<string, any> = {};
+
+    if (updatedData.status) setOperations.status = updatedData.status;
+    if (updatedData.amount) setOperations.amount = updatedData.amount;
+    if (updatedData.name) setOperations.name = updatedData.name;
+    if (updatedData.dueDate) setOperations.dueDate = updatedData.dueDate;
+
+    if (Object.keys(setOperations).length > 0) {
+      operations.$set = setOperations;
+    }
+
+    if (updatedData.paymentId) {
+      operations.$push = { paymentsIds: updatedData.paymentId };
+    }
+
+    if (updatedData.paymentAmount) {
+      operations.$inc = { amountPaid: updatedData.paymentAmount };
+    }
+
+    const updatedBill = await update(billId, operations);
 
     if (!updatedBill) {
       throw new Error('Bill not found or update failed');

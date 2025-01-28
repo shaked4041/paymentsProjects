@@ -14,6 +14,7 @@ export default function PaymentBill({
   paymentMethod,
   setPaymentStatus,
   amountPaid,
+  userId,
 }: PaymentProps) {
   const { billId } = useParams<{ billId: string }>();
   const [loading, setLoading] = useState(false);
@@ -21,13 +22,13 @@ export default function PaymentBill({
   const [isPartial, setIsPartial] = useState<boolean>(false);
   const nav = useNavigate()
 
-  let leftToPay = totalAmount; // Declare `leftToPay` with an initial value.
+  let leftToPay = totalAmount; 
 
   if (amountPaid) {
-    leftToPay = totalAmount - amountPaid; // Update `leftToPay` if `amountPaid` exists.
+    leftToPay = totalAmount - amountPaid; 
   }
   
-  const currentToPay = leftToPay; // Use `leftToPay` as it will always have a valid value.
+  const currentToPay = leftToPay; 
   
   const minAmount = currentToPay * 0.25;
 
@@ -72,6 +73,7 @@ export default function PaymentBill({
       billId,
       amount,
       paymentMethod,
+      userId,
     };
 
     setLoading(true);
@@ -80,8 +82,8 @@ export default function PaymentBill({
 
     try {
       toast.info('Payment sent and being processed...');
-      await createPayment(paymentData);
       nav('/')
+      await createPayment(paymentData);
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||

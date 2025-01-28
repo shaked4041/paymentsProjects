@@ -1,9 +1,8 @@
 import { toast } from 'react-toastify';
-import { IBillForm } from '../pages/AddBill';
 import axios from 'axios';
+import { Bill, IBillForm } from './types';
 
-
-const baseUrl = 'http://localhost:3002';
+const baseUrl = import.meta.env.VITE_BASE_URL;
 
 export const api = axios.create({
   baseURL: baseUrl,
@@ -12,13 +11,12 @@ export const api = axios.create({
 
 export const activateRefresh = async () => {
   try {
-    const response = await api.post('/auth/refresh')
+    const response = await api.post('/auth/refresh');
     console.log(response);
   } catch (error) {
     console.error('Failed to refresh tokens', error);
-
   }
-}
+};
 
 export const getCurrentUser = async () => {
   try {
@@ -35,6 +33,17 @@ export const fetchAllBills = async () => {
     return response.data;
   } catch (error: any) {
     throw new Error(error?.response?.data?.message || 'Error fetching bills');
+  }
+};
+
+export const fetchAllPayments = async () => {
+  try {
+    const response = await api.get('/payments');
+    return response.data;
+  } catch (error: any) {
+    throw new Error(
+      error?.response?.data?.message || 'Error fetching payments'
+    );
   }
 };
 
@@ -118,6 +127,31 @@ export const createBill = async (data: IBillForm) => {
   } catch (error: any) {
     toast.error(
       error?.response?.data?.message || error.message || 'Bill creation failed'
+    );
+    throw error;
+  }
+};
+
+export const editBill = async (data: Partial<Bill>) => {
+  try {
+    const billId = data._id;
+    const res = await api.put(`/bills/${billId}`, data);
+    return res;
+  } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message || error.message || 'Bill creation failed'
+    );
+    throw error;
+  }
+};
+
+export const loginFirebase = async (idToken: string) => {
+  try {
+    const res = await api.post('/auth/firebase-google', { idToken });
+    return res.data;
+  } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message || error.message || 'Google login faild'
     );
     throw error;
   }

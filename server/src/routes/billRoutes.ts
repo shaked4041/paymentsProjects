@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import { createNewBill, getAllBills, getSingleBill, getUnpaidBills, updateBill } from '../services/billService';
 import { identifyCurrentUser } from '../utils/funcs';
+import mongoose from 'mongoose';
 
 const router = Router();
 
@@ -42,7 +43,7 @@ router.get('/unpaid/unpaidBills', async (req: Request, res: Response): Promise<v
 router.get('/:id', async (req: Request, res: Response): Promise<void> => {
   const billId = req.params.id;
   try {
-    const bill = await getSingleBill(billId);
+    const bill = await getSingleBill(new mongoose.Types.ObjectId(billId));
      res.status(200).json(bill);
   } catch (error) {
     console.error(`Error getting bill with id : ${billId}`, error);
@@ -54,7 +55,7 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
   const billId = req.params.id;
   const updatedData = req.body;
   try {
-    const updatedBill = await updateBill(billId, updatedData);
+    const updatedBill = await updateBill(new mongoose.Types.ObjectId(billId), updatedData);
 
     if (updatedBill) {
       res.status(200).json(updatedBill); 

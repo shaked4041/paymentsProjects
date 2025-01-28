@@ -12,7 +12,7 @@ export async function read(filter: any = {}) {
   }
 }
 
-export async function readOne(id: string) {
+export async function readOne(id: Types.ObjectId) {
   try {
     const bill = await BillModel.findById({ _id: id });
     return bill;
@@ -45,25 +45,17 @@ export async function create(data: any) {
 }
 
 export async function update(
-  billId: string,
-  updateQuery: Partial<IBill>
-  // updatedData: Partial<IBill>
+  billId: Types.ObjectId,
+  updateOperations: Partial<IBill>
 ): Promise<IBill | null> {
   try {
-    // const existingBill = await BillModel.findById(billId);
-    // if (!existingBill) {
-    //   throw new Error('Bill not found');
-    // }
-
-    if (!Types.ObjectId.isValid(billId)) {
-      throw new Error('Invalid billId');
-    }
-
     const updatedBill = await BillModel.findOneAndUpdate(
       { _id: billId },
-      // { $set: updatedData },
-      updateQuery,
-      { new: true }
+      updateOperations,
+      {
+        new: true, 
+        runValidators: true, 
+      }
     );
 
     if (!updatedBill) {

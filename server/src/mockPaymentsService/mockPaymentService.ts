@@ -2,7 +2,7 @@ import axios from 'axios';
 import { PaymentPayload } from '../utils/types';
 
 const proccessPayment = async (data: PaymentPayload) => {
-  const { billId, amount, paymentMethod } = data;
+  const { billId, userId, amount, paymentMethod } = data;
   const fiveMinutesInMs = 5 * 60 * 1000;
   return new Promise((resolve, reject) => {
     setTimeout(async () => {
@@ -14,6 +14,7 @@ const proccessPayment = async (data: PaymentPayload) => {
       try {
         await axios.post('http://localhost:3002/webhooks/webhookPayment', {
           billId,
+          userId,
           amount,
           paymentMethod,
           status: paymentSuccess ? 'success' : 'failure',

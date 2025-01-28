@@ -11,19 +11,6 @@ export async function read(filter: any = {}) {
     throw new Error('faild to retive users from api');
   }
 }
-// : Promise<IUser | null>
-// export async function readOne(filter: Partial<IUser> | string) {
-//   try {
-//     const user = await UserModel.findOne(filter);
-//     return user;
-//   } catch (error) {
-//     console.error('Error getting user', error);
-//     throw new Error(
-//       `Failed to retrieve user with filter: ${JSON.stringify(filter)}`
-//     );
-//   }
-// }
-
 
 export async function getUserByEmail(email: string) {
   try {
@@ -55,37 +42,27 @@ export async function createUser(data: UserPayload): Promise<IUser> {
 
 export async function update(
   userId: string,
-  updatedData: Partial<IUser>
+  updatedData: Record<string, any> = {},
+  pushData: Record<string, any> = {}
 ): Promise<IUser | null> {
   try {
-    const existingUser = await UserModel.findById(userId);
-    if (!existingUser) {
+
+    const updates = {
+      ...(Object.keys(updatedData).length && { $set: updatedData }),
+      ...(Object.keys(pushData).length && { $push: pushData })
+    };
+
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updates, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!updatedUser) {
       throw new Error('User not found');
     }
 
-    const updateQuery: any = { $set: updatedData };
-
-
-    // const updatedUser = await UserModel.findByIdAndUpdate(
-    //   { _id: userId },
-    //   { $set: updatedData }, 
-    //   { new: true }           
-    // );
-    // console.log('Updated user in DB:', updatedUser);
-
-    const updateResult = await UserModel.updateOne(
-      { _id: userId },
-      updateQuery
-    );
-
-    if (updateResult.modifiedCount === 0) {
-      throw new Error('Failed to update user');
-    }
-
-    // Fetch and return the updated user document
-    const updatedUser = await UserModel.findById(userId);
     return updatedUser;
-    } catch (error) {
+  } catch (error) {
     console.error('Error in updating user:', error);
     throw new Error('Unable to update user');
   }

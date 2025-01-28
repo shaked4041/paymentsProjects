@@ -60,6 +60,7 @@ export default function PaymentPage() {
             paymentMethod={paymentMethod}
             setPaymentStatus={setPaymentStatus}
             amountPaid={fullBill?.amountPaid}
+            userId={fullBill?.userId || ''}
           />
         </div>
       </div>

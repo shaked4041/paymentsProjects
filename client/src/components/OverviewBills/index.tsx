@@ -1,18 +1,14 @@
 import React from 'react';
 import { isDateInCurrentMonth } from '../../utils/funcs';
-import { Bill } from '../../utils/types';
 import styles from './style.module.scss';
-
-interface OverviewBillsProps {
-  allBillsData: Bill[];
-}
+import { OverviewBillsProps } from '../../utils/types';
 
 export const OverviewBills: React.FC<OverviewBillsProps> = ({
   allBillsData,
 }) => {
   const billsDueThisMonthArray =
     allBillsData && allBillsData.length > 0
-      ? allBillsData.filter((bill) => isDateInCurrentMonth(bill.dueDate))
+      ? allBillsData.filter((bill) => isDateInCurrentMonth((bill.dueDate).toString()))
       : [];
 
   let sumDueThisMonth = billsDueThisMonthArray.reduce((sum, bill) => {
@@ -24,7 +20,7 @@ export const OverviewBills: React.FC<OverviewBillsProps> = ({
       ? allBillsData.filter((bill) => bill.status === 'Paid')
       : [];
 
-     const paidTihsMonth =  paidBills.filter((bill) => isDateInCurrentMonth(bill.dueDate))
+     const paidTihsMonth =  paidBills.filter((bill) => isDateInCurrentMonth((bill.dueDate).toString()))
 
   const sumPaidBills = paidTihsMonth.reduce((sum, bill) => {
     return sum + bill.amount;

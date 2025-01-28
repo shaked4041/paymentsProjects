@@ -10,10 +10,11 @@ const router = Router();
 router.post(
   '/webhookPayment',
   async (req: Request, res: Response): Promise<any> => {
-    const { billId, amount, paymentMethod, status } = req.body;
+    const { billId,userId, amount, paymentMethod, status } = req.body;
     if (!billId || !amount || !paymentMethod || !status) {
       console.error('Missing required fields:', {
         billId,
+        userId,
         amount,
         paymentMethod,
         status,

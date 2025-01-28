@@ -17,7 +17,12 @@ const UserSchema: Schema = new Schema<IUser>({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
+  },
+  firebaseUid: {
+    type: String,
+    unique: true,
+    required: false, 
   },
   billIds: {
     type: [mongoose.Schema.Types.ObjectId],

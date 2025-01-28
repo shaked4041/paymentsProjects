@@ -1,4 +1,5 @@
 import PaymentModel from "../models/Payment";
+import BillModel from "../models/Bill";
 
 
 export async function create(data: any) {
@@ -13,7 +14,9 @@ export async function create(data: any) {
   
   export async function read(filter: any = {}){
     try {
-      const payments = await PaymentModel.find(filter);
+      const payments = await PaymentModel.find(filter).populate('billId');
+      console.log("paymentsss", payments);
+      
       return payments
     } catch (error) {
       console.error('Error in getPayments', error);

@@ -1,10 +1,13 @@
+import { JwtPayload } from 'jsonwebtoken';
 import mongoose, { Types } from 'mongoose';
 
 export interface IUser extends Document {
+  _id: Types.ObjectId;
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
+  password?: string;
+  firebaseUid?: string
   billIds: mongoose.Schema.Types.ObjectId[];
 }
 
@@ -21,13 +24,14 @@ export interface IBill extends Document {
   amount: number;
   dueDate: Date;
   status: 'Paid' | 'Pending' | 'Overdue' | 'Processing' | 'PartPaid';
-  userId?: string;
+  userId?: Types.ObjectId;
   paymentsIds?: Types.ObjectId[];
   amountPaid: number;
 }
 
 export interface IPayment extends Document {
-  billId: string;
+  billId: Types.ObjectId;
+  userId: Types.ObjectId;
   amount: number;
   paymentMethod: PaymentMethods;
   status: 'success' | 'failure';
@@ -37,11 +41,13 @@ export interface UserPayload {
   firstName: string;
   lastName: string;
   email: string;
-  password: string;
+  password?: string;
+  firebaseUid?: string;
 }
 
 export interface PaymentPayload {
-  billId: string;
+  billId: Types.ObjectId;
+  userId: Types.ObjectId;
   amount: number;
   paymentMethod: string;
 }
@@ -50,9 +56,22 @@ export class HttpError extends Error {
   status: number;
   
   constructor(message: string, status: number) {
-    super(message); // Call the parent constructor (Error)
+    super(message); 
     this.status = status;
-    this.name = this.constructor.name; // Set the error name to the class name
-    Error.captureStackTrace(this, this.constructor); // Capture the stack trace
+    this.name = this.constructor.name; 
+    Error.captureStackTrace(this, this.constructor); 
   }
+}
+
+export interface TokenPayload extends JwtPayload {
+  _id: Types.ObjectId;
+}
+
+export interface BillUpdateData {
+  status?: string;
+  amount?: number;
+  name?: string;
+  dueDate?: Date;
+  paymentId?: Types.ObjectId;
+  paymentAmount?: number;
 }
