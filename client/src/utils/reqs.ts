@@ -81,15 +81,28 @@ export const createUser = async (userData: {
 export const login = async (userData: { email: string; password: string }) => {
   try {
     const response = await api.post('/auth/login', userData);
-    localStorage.setItem('accessToken', response.data.accessToken);
     console.log('User loggedIn:', response.data);
     toast.success(response.data.message || 'Login successful');
-    return response.data;
+    return response;
   } catch (error: any) {
     toast.error(error?.response?.data?.msg || 'Login failed');
     throw error;
   }
 };
+
+
+export const loginFirebase = async (idToken: string) => {
+  try {
+    const res = await api.post('/auth/firebase-google', { idToken });
+    return res;
+  } catch (error: any) {
+    toast.error(
+      error?.response?.data?.message || error.message || 'Google login faild'
+    );
+    throw error;
+  }
+};
+
 
 export const logout = async () => {
   try {
@@ -140,18 +153,6 @@ export const editBill = async (data: Partial<Bill>) => {
   } catch (error: any) {
     toast.error(
       error?.response?.data?.message || error.message || 'Bill creation failed'
-    );
-    throw error;
-  }
-};
-
-export const loginFirebase = async (idToken: string) => {
-  try {
-    const res = await api.post('/auth/firebase-google', { idToken });
-    return res.data;
-  } catch (error: any) {
-    toast.error(
-      error?.response?.data?.message || error.message || 'Google login faild'
     );
     throw error;
   }

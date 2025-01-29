@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import BillsDashboard from './pages/BillsDashboard';
 import Header from './components/Header';
 import PaymentFormPage from './pages/PaymentFormPage';
@@ -12,9 +17,11 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useEffect } from 'react';
 import { activateRefresh } from './utils/reqs';
-import EditBill from './pages/EditBill'
+import EditBill from './pages/EditBill';
+import { useAuthStore } from './store/authStore';
 
 export default function App() {
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -39,29 +46,36 @@ export default function App() {
         theme="light"
       />
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />}
+        />
         <Route path="/register" element={<RegisterPage />} />
         <Route
           path="/*"
           element={
-            <div className={styles.appContainer}>
-              <Navbar />
-              <div className={styles.restCont}>
-                <Header />
-                <div className={styles.mainContent}>
-                  <Routes>
-                    <Route path="/" element={<BillsDashboard />} />
-                    <Route path='/editBill/:billId' element={<EditBill/>}/>
-                    <Route
-                      path="/payments/:billId"
-                      element={<PaymentFormPage />}
-                    />
-                    <Route path="/addBill" element={<AddBill />} />
-                    <Route path="/payments" element={<PaymentsPage />} />
-                  </Routes>
+            isAuthenticated ? (
+              <div className={styles.appContainer}>
+                <Navbar />
+                <div className={styles.restCont}>
+                  <Header />
+                  <div className={styles.mainContent}>
+                    <Routes>
+                      <Route path="/" element={<BillsDashboard />} />
+                      <Route path="/editBill/:billId" element={<EditBill />} />
+                      <Route
+                        path="/payments/:billId"
+                        element={<PaymentFormPage />}
+                      />
+                      <Route path="/addBill" element={<AddBill />} />
+                      <Route path="/payments" element={<PaymentsPage />} />
+                    </Routes>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <Navigate to="/login" />
+            )
           }
         />
       </Routes>

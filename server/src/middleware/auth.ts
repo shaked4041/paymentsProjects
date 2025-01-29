@@ -48,7 +48,6 @@ dotenv.config();
     }
     const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(payload._id, res, isProduction);
-
     req.user = payload;
     next();
   } catch (error) {

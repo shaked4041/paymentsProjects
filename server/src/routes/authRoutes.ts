@@ -10,6 +10,7 @@ dotenv.config();
 
 const saltRound = 10;
 const router = Router();
+const isProduction = process.env.NODE_ENV === 'production';
 
 router.post('/login', async (req: Request, res: Response): Promise<void> => {
   try {
@@ -31,10 +32,11 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(checkUser._id, res, isProduction);
-
-    res.json({ message: 'Logged in successfully' });
+    res.json({
+      message: 'Logged in successfully',
+      userId: checkUser._id.toString(),
+    });
   } catch (error: any) {
     console.error('Login error:', error);
     res.status(500).json({ msg: error.msg || 'somthing went wrong' });
@@ -50,10 +52,7 @@ router.post('/firebase-google', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Email not available in the ID token' });
       return;
     }
-
     let user = await getUser(email);
-    const isProduction = process.env.NODE_ENV === 'production';
-
     if (!user) {
       const newUser = await addNewUser({
         email,
@@ -99,7 +98,6 @@ router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
       res.status(403).json({ message: 'Refresh token expired' });
       return;
     }
-    const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(payload._id, res, isProduction);
 
     res.status(200).json({ message: 'Tokens refreshed successfully' });
@@ -137,18 +135,17 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
 });
 
 router.post('/logout', (req: Request, res: Response) => {
-  const isProduction = process.env.NODE_ENV === 'production';
 
   res.clearCookie('accessToken', {
     path: '/',
     secure: isProduction,
-    sameSite: 'none',
+    sameSite: isProduction ? 'none' : 'lax',
   });
 
   res.clearCookie('refreshToken', {
     path: '/',
     secure: isProduction,
-    sameSite: 'none',
+    sameSite: isProduction ? 'none' : 'lax',
   });
 
   res.status(200).json({ message: 'Logged out successfully' });

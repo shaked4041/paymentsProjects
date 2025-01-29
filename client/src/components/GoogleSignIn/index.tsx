@@ -3,8 +3,10 @@ import { loginFirebase } from '../../utils/reqs';
 import styles from './style.module.scss';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, provider } from '../../utils/firebase';
+import { useAuthStore } from '../../store/authStore';
 
 export default function GoogleSignIn() {
+  const { setUser, setAuthenticated } = useAuthStore();
   const nav = useNavigate();
 
   const handleGoogleSignIn = async () => {
@@ -15,12 +17,10 @@ export default function GoogleSignIn() {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       const res = await loginFirebase(idToken);
-      if (res) {
-        console.log('Login successful, navigating...', res);
-        nav('/');
-      } else {
-        console.error('Login failed:', res?.message || 'Unknown error');
-      }
+      console.log(res);
+      setUser(res.data.user._id);
+      setAuthenticated(true);
+      nav('/');
     } catch (error: any) {
       console.error('Error during Google sign-in:', error.message);
     }

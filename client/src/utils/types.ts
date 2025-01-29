@@ -114,3 +114,11 @@ export interface Bill {
     passwordConfirm: string;
   }
   
+  export interface AuthStore {
+    user: string | null;
+    isAuthenticated: boolean;
+    setUser: (user: string | null) => void;
+    logoutUser: () => Promise<void>;
+    fetchCurrentUser: () => void;
+    setAuthenticated: (isAuthenticated: boolean) => void;
+  }

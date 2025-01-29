@@ -26,7 +26,6 @@ export const identifyCurrentUser = (req: Request): string | null => {
   }
 };
 
-
 export const setTokensAndCookies = (
   userId: Types.ObjectId,
   res: Response,
@@ -38,8 +37,7 @@ export const setTokensAndCookies = (
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: 'none',
-    // sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
     maxAge: 5 * 60 * 1000,
   });
@@ -47,12 +45,9 @@ export const setTokensAndCookies = (
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: 'none',
-    // sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: isProduction ? 'none' : 'lax',
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
-
-  console.log('Cookies set:', res.getHeaders()['set-cookie']);
 
 };

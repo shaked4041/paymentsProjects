@@ -1,13 +1,21 @@
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../utils/reqs';
 import styles from './style.module.scss';
 import { IoIosLogOut } from 'react-icons/io';
+import { useAuthStore } from '../../store/authStore';
+import { toast } from 'react-toastify';
 
 export default function index() {
+  const { logoutUser } = useAuthStore();
   const nav = useNavigate();
-  const handleLogout = () => {
-    logout();
-    nav('/login');
+
+  const handleLogout = async () => {
+    try {
+      logoutUser() 
+      nav('/login');  
+    } catch (error) {
+      console.error('Logout failed:', error);  
+      toast.error('Logout failed. Please try again.');
+    }
   };
 
   return (
@@ -21,7 +29,6 @@ export default function index() {
           <IoIosLogOut />
         </button>
         <span className={styles.tooltipText}>Logout</span>
-
       </div>
     </div>
   );

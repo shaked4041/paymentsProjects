@@ -6,7 +6,7 @@ import { LuEye } from 'react-icons/lu';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleSignIn from '../../components/GoogleSignIn';
 import { ILoginState } from '../../utils/types';
-
+import { useAuthStore } from '../../store/authStore';
 
 export default function LoginPage() {
   const formTemplate: ILoginState = {
@@ -15,7 +15,8 @@ export default function LoginPage() {
   };
   const [formState, setFormState] = useState<ILoginState>(formTemplate);
   const [isPassVisible, setIsPassVisible] = useState<Boolean>(false);
-
+  const { setUser, setAuthenticated } = useAuthStore();
+  const { user } = useAuthStore();
   const nav = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,9 +33,10 @@ export default function LoginPage() {
     const { ...data } = formState;
     try {
       const res = await login(data);
-      if (res) {
-        nav('/');
-      }
+      console.log('Login response:', res.data);
+      setUser(res.data.userId);
+      setAuthenticated(true)
+      nav('/');
       console.log(res);
     } catch (error: any) {
       console.error({ 'User creation faild': error.response.data.msg });
