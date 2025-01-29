@@ -2,41 +2,37 @@ import { Router } from 'express';
 import { Request, Response } from 'express';
 import { getSingleBill, updateBill } from '../services/billService';
 import { create } from '../controllers/paymentController';
-import { Types } from 'mongoose';
+import { Types, ObjectId } from 'mongoose';
 import { sendPaymentUpdate } from '../services/socketService';
+import { WebhookPaymentBody } from '../utils/types';
 
 const router = Router();
 
 router.post(
   '/webhookPayment',
-  async (req: Request, res: Response): Promise<any> => {
-    const { billId,userId, amount, paymentMethod, status } = req.body;
-    if (!billId || !amount || !paymentMethod || !status) {
-      console.error('Missing required fields:', {
-        billId,
-        userId,
-        amount,
-        paymentMethod,
-        status,
-      });
-      return res.status(400).json({ message: 'Missing required fields' });
-    }
-
-    const fullBill = await getSingleBill(billId);
-
-    let billStatus; 
-    
-    if (fullBill && fullBill.amount > amount) {
-      billStatus = 'PartPaid';
-    } else if (status === 'success') {
-      billStatus = 'Paid';
-    } else {
-      billStatus = 'Pending';
-    }    
-
+  async (req: Request<{}, {}, WebhookPaymentBody>, res: Response) => {
     try {
+      const { billId, userId, amount, paymentMethod, status } = req.body;
+
+      if (!billId || !amount || !paymentMethod || !status) {
+        console.error('Missing required fields:', req.body);
+        return res.status(400).json({ message: 'Missing required fields' });
+      }
+      const objectIdBill = new Types.ObjectId(billId);
+      const fullBill = await getSingleBill(objectIdBill);
+      if (!fullBill) {
+        return res.status(404).json({ message: 'Bill not found' });
+      }
+
+      let billStatus =
+        fullBill && fullBill.amount > amount
+          ? 'PartPaid'
+          : status === 'success'
+          ? 'Paid'
+          : 'Pending';
+
       const newPayment = await create(req.body);
-      const updatedBill = await updateBill(billId, {
+      const updatedBill = await updateBill(objectIdBill, {
         status: billStatus,
         paymentId: newPayment._id as Types.ObjectId,
         paymentAmount: amount,

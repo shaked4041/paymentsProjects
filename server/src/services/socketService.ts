@@ -8,8 +8,7 @@ export const initializeSocket = (server: http.Server) => {
     cors: {
       origin: process.env.NODE_ENV === 'production'
       ? 'https://payments-projects.vercel.app' 
-      : 'http://localhost:5174', 
-      // origin: ['http://localhost:5174', 'http://localhost:5173'],
+      : ['http://localhost:5174', 'http://localhost:5173'], 
       methods: ['GET', 'POST'],
     },
   });

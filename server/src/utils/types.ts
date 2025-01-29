@@ -75,3 +75,27 @@ export interface BillUpdateData {
   paymentId?: Types.ObjectId;
   paymentAmount?: number;
 }
+
+export interface NewBillProps{
+  name: string;
+  amount: number;
+  dueDate: Date;
+  userId: Types.ObjectId;
+}
+
+
+export interface UserProps{
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  billId: Types.ObjectId;
+}
+
+export interface WebhookPaymentBody {
+  billId: string;
+  userId?: string;  
+  amount: number;
+  paymentMethod: string;
+  status: 'success' | 'failed' | 'pending'; 
+}

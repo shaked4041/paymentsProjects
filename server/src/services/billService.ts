@@ -6,7 +6,7 @@ import {
   update,
   readOne,
 } from '../controllers/billController';
-import { BillUpdateData, IBill } from '../utils/types';
+import { BillUpdateData, IBill, NewBillProps } from '../utils/types';
 import UserModel from '../models/User';
 
 export async function getAllBills(filter: any = {}) {
@@ -24,12 +24,7 @@ export async function createNewBill({
   amount,
   dueDate,
   userId,
-}: {
-  name: string;
-  amount: number;
-  dueDate: Date;
-  userId: Types.ObjectId;
-}) {
+}: NewBillProps) {
   try {
     if (new Date(dueDate).getTime() < Date.now()) {
       throw new Error('Due date cannot be in the past');

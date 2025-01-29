@@ -5,7 +5,7 @@ import {
   update,
 } from '../controllers/userController';
 import { createUser } from '../controllers/userController';
-import { IUser, UserPayload } from '../utils/types';
+import { IUser, UserPayload, UserProps } from '../utils/types';
 import bcrypt from 'bcrypt';
 
 export const addNewUser = async (data: UserPayload) => {
@@ -39,13 +39,7 @@ export const getUser = async (email: string) => {
   }
 };
 
-type UserUpdateData = Partial<{
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  billId: Types.ObjectId;
-}>;
+type UserUpdateData = Partial<UserProps>;
 
 export const updateUser = async (
   userId: string,

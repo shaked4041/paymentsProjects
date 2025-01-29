@@ -25,15 +25,18 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === 'production'
-      ? ['https://payments-projects.vercel.app', 'https://payments-projects-ecksjyrys-shaked4041s-projects.vercel.app']
+        ? [
+            'https://payments-projects.vercel.app',
+            'https://payments-projects-ecksjyrys-shaked4041s-projects.vercel.app',
+          ]
         : ['http://localhost:5174', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',
       'Authorization',
       'Access-Control-Allow-Headers',
-      'Access-Control-Allow-Credentials',
-      'Access-Control-Allow-Origin',
+      // 'Access-Control-Allow-Credentials',
+      // 'Access-Control-Allow-Origin',
     ],
     exposedHeaders: ['Set-Cookie'],
     credentials: true,
@@ -45,10 +48,10 @@ app.options('*', cors());
 const server = http.createServer(app);
 initializeSocket(server);
 
-app.use('/bills', billRouter);
-// app.use('/bills', authenticateTokenMiddlware, billRouter);
-app.use('/payments', paymentRouter);
-// app.use('/payments', authenticateTokenMiddlware, paymentRouter);
+// app.use('/bills', billRouter);
+// app.use('/payments', paymentRouter);
+app.use('/bills', authenticateTokenMiddlware, billRouter);
+app.use('/payments', authenticateTokenMiddlware, paymentRouter);
 app.use('/webhooks', webhookRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);

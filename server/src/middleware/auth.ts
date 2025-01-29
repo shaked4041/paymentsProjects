@@ -36,7 +36,8 @@ dotenv.config();
     }
 
     if (!refreshToken) {
-      throw new HttpError('No refresh token', 401);
+      res.status(401).json({ message: 'No refresh token provided' });
+      return ;
     }
 
     const payload = decodeRefreshToken(refreshToken);
@@ -44,7 +45,8 @@ dotenv.config();
       res.clearCookie('accessToken', { path: '/' });
       res.clearCookie('refreshToken', { path: '/' });
 
-      throw new HttpError('Invalid refresh token', 403);
+      res.status(403).json({ message: 'Invalid refresh token' });
+      return ;
     }
     const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(payload._id, res, isProduction);
