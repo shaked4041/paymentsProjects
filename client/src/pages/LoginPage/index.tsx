@@ -16,7 +16,6 @@ export default function LoginPage() {
   const [formState, setFormState] = useState<ILoginState>(formTemplate);
   const [isPassVisible, setIsPassVisible] = useState<Boolean>(false);
   const { setUser, setAuthenticated } = useAuthStore();
-  const { user } = useAuthStore();
   const nav = useNavigate();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
