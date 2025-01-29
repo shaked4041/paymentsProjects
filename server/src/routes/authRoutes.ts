@@ -26,7 +26,11 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
         ? bcrypt.compareSync(user.password, checkUser.password)
         : false;
 
-    if (!isPasswordValid) throw { msg: 'Invalid password', code: 401 };
+    if (!isPasswordValid) {
+      res.status(401).json({ message: 'Invalid Password' });
+      return;        
+      };
+      
     const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(checkUser._id, res, isProduction);
 
