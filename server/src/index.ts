@@ -25,8 +25,8 @@ app.use(express.json());
 
 app.use(
   cors({
-    // origin: ['http://localhost:5174', 'http://localhost:5173'],
-    origin: 'https://payments-projects.vercel.app/',
+    origin: ['http://localhost:5174', 'http://localhost:5173','https://payments-projects.vercel.app/'],
+    // origin: 'https://payments-projects.vercel.app/',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',

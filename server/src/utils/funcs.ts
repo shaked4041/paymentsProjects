@@ -30,7 +30,8 @@ export const setTokensAndCookies = (userId: Types.ObjectId, res: Response, isPro
   res.cookie('accessToken', accessToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: 'none',
+    // sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
     maxAge: 5 * 60 * 1000,
   });
@@ -38,7 +39,8 @@ export const setTokensAndCookies = (userId: Types.ObjectId, res: Response, isPro
   res.cookie('refreshToken', refreshToken, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite: 'none',
+    // sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000, 
   });
