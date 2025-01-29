@@ -26,8 +26,8 @@ app.use(
     origin:
       process.env.NODE_ENV === 'production'
         ? [
-            'https://payments-projects.vercel.app',
-            'https://payments-projects-ecksjyrys-shaked4041s-projects.vercel.app',
+          'https://payments-projects-180fowhv1-shaked4041s-projects.vercel.app', // your frontend URL
+          'https://payments-projects.vercel.app',    
           ]
         : ['http://localhost:5174', 'http://localhost:5173'],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
