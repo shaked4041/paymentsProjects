@@ -157,7 +157,7 @@ export default function PaymentBill({
           buttonText={
             loading
               ? 'Processing...'
-              : `Continue To Pay: $${amount ? formatAmount(amount) : '0.00'}`
+              : `Pay: $${amount ? formatAmount(amount) : '0.00'}`
           }
           onClick={handlePayment}
           disabled={isButtonDisabled}
