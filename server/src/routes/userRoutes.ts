@@ -1,4 +1,4 @@
-import express, { Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import { identifyCurrentUser } from '../utils/funcs';
 
 const router = Router();
