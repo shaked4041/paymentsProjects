@@ -28,9 +28,9 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 
     if (!isPasswordValid) {
       res.status(401).json({ message: 'Invalid Password' });
-      return;        
-      };
-      
+      return;
+    }
+
     const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(checkUser._id, res, isProduction);
 
@@ -137,8 +137,19 @@ router.post('/register', async (req: Request, res: Response): Promise<void> => {
 });
 
 router.post('/logout', (req: Request, res: Response) => {
-  res.clearCookie('accessToken', { path: '/' });
-  res.clearCookie('refreshToken', { path: '/' });
+  const isProduction = process.env.NODE_ENV === 'production';
+
+  res.clearCookie('accessToken', {
+    path: '/',
+    secure: isProduction,
+    sameSite: 'none',
+  });
+
+  res.clearCookie('refreshToken', {
+    path: '/',
+    secure: isProduction,
+    sameSite: 'none',
+  });
 
   res.status(200).json({ message: 'Logged out successfully' });
 });

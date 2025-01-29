@@ -8,10 +8,13 @@ export const usePaymentSocket = (
   billName: string | undefined,
   setPaymentStatus: (status: string | null) => void
 ) => {
+
+  const baseUrl = import.meta.env.VITE_BASE_URL;
+
   useEffect(() => {
     if (!billId) return;
 
-    const socket: Socket = io('http://localhost:3002', {
+    const socket: Socket = io(baseUrl, {
       transports: ['websocket'],
     });
 
