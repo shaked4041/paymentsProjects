@@ -25,7 +25,7 @@ app.use(
   cors({
     origin:
       process.env.NODE_ENV === 'production'
-        ? 'https://payments-projects.vercel.app'
+      ? ['https://payments-projects.vercel.app', 'https://payments-projects-ecksjyrys-shaked4041s-projects.vercel.app']
         : 'http://localhost:5174',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
