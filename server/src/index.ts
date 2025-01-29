@@ -45,10 +45,10 @@ app.options('*', cors());
 const server = http.createServer(app);
 initializeSocket(server);
 
-app.use('/bills', billRouter);
-// app.use('/bills', authenticateTokenMiddlware, billRouter);
-app.use('/payments', paymentRouter);
-// app.use('/payments', authenticateTokenMiddlware, paymentRouter);
+// app.use('/bills', billRouter);
+app.use('/bills', authenticateTokenMiddlware, billRouter);
+// app.use('/payments', paymentRouter);
+app.use('/payments', authenticateTokenMiddlware, paymentRouter);
 app.use('/webhooks', webhookRouter);
 app.use('/users', userRouter);
 app.use('/auth', authRouter);
