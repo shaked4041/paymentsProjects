@@ -71,10 +71,10 @@ export const createUser = async (userData: {
     const response = await api.post('/auth/register', userData);
     console.log('User created:', response.data);
     toast.success(response.data.message || 'Registration successful');
-    return response.data;
+    return response;
   } catch (error: any) {
     toast.error(error?.response?.data?.msg || 'Register faild');
-    throw error;
+    throw error?.response;
   }
 };
 
@@ -102,7 +102,6 @@ export const loginFirebase = async (idToken: string) => {
     throw error;
   }
 };
-
 
 export const logout = async () => {
   try {

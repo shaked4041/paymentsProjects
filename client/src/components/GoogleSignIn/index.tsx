@@ -17,7 +17,7 @@ export default function GoogleSignIn() {
       const result = await signInWithPopup(auth, provider);
       const idToken = await result.user.getIdToken();
       const res = await loginFirebase(idToken);
-      console.log(res);
+      console.log(res.data);
       setUser(res.data.user._id);
       setAuthenticated(true);
       nav('/');

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import dotenv from 'dotenv';
 import { decodeAccessToken, decodeRefreshToken } from './jwt';
-import { HttpError, TokenPayload } from '../utils/types';
+import { TokenPayload } from '../utils/types';
 import { setTokensAndCookies } from '../utils/funcs';
 
 declare global {
@@ -14,41 +14,52 @@ declare global {
 
 dotenv.config();
 
- const authenticateTokenMiddlware = async (
+const authenticateTokenMiddlware = async (
   req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> => {
+  const isProduction = process.env.NODE_ENV === 'production';
   try {
     const accessToken = req.cookies.accessToken;
     const refreshToken = req.cookies.refreshToken;
-
+    
     if (!accessToken && !refreshToken) {
-      throw new HttpError('Access denied, no tokens present', 401);
+      console.warn("No tokens provided, skipping authentication");
+      return next(); 
     }
 
     if (accessToken) {
-      const payload = decodeAccessToken(accessToken);
-      if (payload) {
-        req.user = payload;
-        return next();
+      try {
+        const payload = decodeAccessToken(accessToken);
+        if (payload) {
+          req.user = payload;
+          return next();
+        }
+      } catch (error) {
+        console.error('Invalid access token:', error);
       }
     }
 
     if (!refreshToken) {
       res.status(401).json({ message: 'No refresh token provided' });
-      return ;
+      return;
     }
 
-    const payload = decodeRefreshToken(refreshToken);
+    let payload: TokenPayload | null = null;
+    try {
+      payload = decodeRefreshToken(refreshToken);
+    } catch (error) {
+      console.error('Invalid refresh token:', error);
+    }
+
     if (!payload) {
       res.clearCookie('accessToken', { path: '/' });
       res.clearCookie('refreshToken', { path: '/' });
 
       res.status(403).json({ message: 'Invalid refresh token' });
-      return ;
+      return;
     }
-    const isProduction = process.env.NODE_ENV === 'production';
     setTokensAndCookies(payload._id, res, isProduction);
     req.user = payload;
     next();

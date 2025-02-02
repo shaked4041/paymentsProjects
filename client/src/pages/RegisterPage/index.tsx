@@ -39,7 +39,7 @@ export default function RegisterPage() {
       nav('/login');
       console.log(res);
     } catch (error: any) {
-      console.error({ 'User creation faild': error.response.data.msg });
+      console.error({ 'User creation faild': error.data.msg });
     }
   };
 

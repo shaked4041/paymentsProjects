@@ -24,9 +24,7 @@ if (!admin.apps.length) {
 
 export const verifyFirebaseToken = async (idToken: string) => {
   try {
-    console.log('Verifying Firebase token...');
     const decodedToken = await admin.auth().verifyIdToken(idToken);
-    console.log('Decoded token:', decodedToken);
     return decodedToken;
   } catch (error) {
     console.error('Error verifying Firebase token:', error);

@@ -43,6 +43,41 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
   }
 });
 
+router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { refreshToken } = req.cookies;
+    if (!refreshToken) {
+      res.status(401).json({ message: 'No refresh token provided' });
+      return;
+    }
+    
+    const payload = decodeRefreshToken(refreshToken);
+    if (!payload) {
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      res.status(403).json({ message: 'Invalid refresh token' });
+      return;
+    }
+    
+    const expirationTime = payload.exp ? payload.exp * 1000 : null;
+    const currentTime = Date.now();
+    
+    if (expirationTime && expirationTime < currentTime) {
+      res.clearCookie('accessToken');
+      res.clearCookie('refreshToken');
+      res.status(403).json({ message: 'Refresh token expired' });
+      return;
+    }
+    setTokensAndCookies(payload._id, res, isProduction);
+    
+    res.status(200).json({ message: 'Tokens refreshed successfully' });
+  } catch (error) {
+    console.error('Error refreshing token:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+
 router.post('/firebase-google', async (req: Request, res: Response) => {
   try {
     const { idToken } = req.body;
@@ -52,57 +87,25 @@ router.post('/firebase-google', async (req: Request, res: Response) => {
       res.status(400).json({ error: 'Email not available in the ID token' });
       return;
     }
+
     let user = await getUser(email);
     if (!user) {
-      const newUser = await addNewUser({
+      const user = await addNewUser({
         email,
         firstName: name.split(' ')[0],
         lastName: name.split(' ')[1] || '',
-        firebaseUid: uid,
+        firebaseUid: uid || null,
       });
-      setTokensAndCookies(newUser._id, res, isProduction);
+      
+      setTokensAndCookies(user._id, res, isProduction);
 
-      res.json({ message: 'Logged in successfully with Google', newUser });
+      res.json({ message: 'Logged in successfully with Google', user });
     } else {
       setTokensAndCookies(user._id, res, isProduction);
       res.json({ message: 'Logged in successfully with Google', user });
     }
   } catch (error) {
     console.error('Error during Firebase Google login:', error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-});
-
-router.post('/refresh', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { refreshToken } = req.cookies;
-    if (!refreshToken) {
-      res.status(401).json({ message: 'No refresh token provided' });
-      return;
-    }
-
-    const payload = decodeRefreshToken(refreshToken);
-    if (!payload) {
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
-      res.status(403).json({ message: 'Invalid refresh token' });
-      return;
-    }
-
-    const expirationTime = payload.exp ? payload.exp * 1000 : null;
-    const currentTime = Date.now();
-
-    if (expirationTime && expirationTime < currentTime) {
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
-      res.status(403).json({ message: 'Refresh token expired' });
-      return;
-    }
-    setTokensAndCookies(payload._id, res, isProduction);
-
-    res.status(200).json({ message: 'Tokens refreshed successfully' });
-  } catch (error) {
-    console.error('Error refreshing token:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 });

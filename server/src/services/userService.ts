@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import {
   getUserByEmail,
   getUserById,
@@ -9,22 +8,42 @@ import { IUser, UserPayload, UserProps } from '../utils/types';
 import bcrypt from 'bcrypt';
 
 export const addNewUser = async (data: UserPayload) => {
-  const { email, firstName, lastName, password , firebaseUid} = data;
+  const {
+    email,
+    firstName,
+    lastName,
+    password = undefined,
+    firebaseUid,
+  } = data;
+
   try {
     const checkEmailUser = await getUserByEmail(email);
     if (checkEmailUser) {
-      throw { message: 'Email is taken, use another', code: 400 };
+      throw { message: "Email is taken, use another", code: 400 };
     }
-    const newUser = await createUser(data);
+
+    const newUserPayload: any = {
+      email,
+      firstName,
+      lastName,
+      password,
+    };
+
+    if (firebaseUid) {
+      newUserPayload.firebaseUid = firebaseUid;
+    }
+
+    const newUser = await createUser(newUserPayload);
     return newUser;
   } catch (error: any) {
-    console.error('Error creating new user:', error.message);
+    console.error("Error creating new user:", error.message);
     throw {
-      message: error.message || 'Error creating new user',
+      message: error.message || "Error creating new user",
       code: error.code || 500,
     };
   }
 };
+
 
 export const getUser = async (email: string) => {
   try {
@@ -46,7 +65,6 @@ export const updateUser = async (
   updatedData: UserUpdateData
 ): Promise<IUser | null> => {
   try {
-
     const user = await getUserById(userId);
     if (!user) {
       throw new Error("User doesn't exsist");

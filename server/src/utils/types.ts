@@ -45,6 +45,7 @@ export interface UserPayload {
   firebaseUid?: string;
 }
 
+
 export interface PaymentPayload {
   billId: Types.ObjectId;
   userId: Types.ObjectId;
@@ -97,5 +98,5 @@ export interface WebhookPaymentBody {
   userId?: string;  
   amount: number;
   paymentMethod: string;
-  status: 'success' | 'failed' | 'pending'; 
+  status: 'success' | 'failed' | 'pending'; // Ensure only valid status values
 }
